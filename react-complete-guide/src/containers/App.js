@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from './Person/Person';
+import Person from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+import Radium , { StyleRoot} from 'radium';
 
 class App extends Component {
 state = {
@@ -46,52 +48,45 @@ toggleHandler = () => {
 }
 
 deletePersonHandler = (personIndex) => {
-  const persons = [...this.state.persons];
+  const persons = [...this.state.person];
   persons.splice(personIndex, 1);
-  this.setState({persons: persons});
+  this.setState({person: persons});
 }
 
 
   render() {
-    const style = {
-      border: '1px solid blue',
-      backgroundColor : 'white',
-      padding : '8px',
-      font : 'inherit',
-      cursor: 'pointer'
-    };
-
+  
     let person = null;
     if(this.state.showPerson) {
       person = (
         <div>
         {/* <Person  click= { this.switchEventHandler.bind(this,"Max!")} name = {this.state.person[0].name} age= { this.state.person[0].age}></Person>
         <Person  change= {this.nameChangeHandler} name = {this.state.person[1].name} age= { this.state.person[1].age} > Hobbies: Creating Apps</Person>
-        <Person name = {this.state.person[2].name} age= { this.state.person[2].age}></Person> */}
-
-        { this.state.person.map( (person,index) => {
-          return <Person
-           click= {() => this.deletePersonHandler(index)} 
-           name ={ person.name} 
-           age = { person.age} 
-           key = { person.id} 
-           change = {(event) => this.nameChangeHandler(event,person.id)}></Person>
-        })};
+        <Person name = {this.state.person[2].name} age= { this.state.person[2].age}></Person> */} 
+        <Person  
+         persons = { this.state.person}
+         clicked = { this.deletePersonHandler} 
+         changed = { this.nameChangeHandler}
+         />
         </div>
       )
     }
 
 
     return (
+      <StyleRoot>
       <div className="App">
-        <h5>Hi, I am a React App</h5>
-        <p> I do wonders </p>
-        <button style= {style} onClick={this.toggleHandler}>Switch name</button>
+         <Cockpit
+         showPersons={ this.state.showPerson}
+         person = { this.state.person}
+         clicked = { this.toggleHandler}
+         />
          {person}
       </div>
+      </StyleRoot>
     );
     // return React.createElement('div',{className: 'App'},React.createElement('h1',null,'I\'m a React app !!!'))
   }
 }
 
-export default App;
+export default Radium(App);
